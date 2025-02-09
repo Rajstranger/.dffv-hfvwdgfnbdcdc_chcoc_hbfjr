@@ -31,12 +31,18 @@
     const crunchSound = document.getElementById("crunch-sound");
     const wantChocolateButton = document.querySelector(".want-chocolate-button");
 
-    elButton.addEventListener("mousedown", (event) => {
+    const handleInteraction = (event) => {
+      const offsetX = event.offsetX || event.touches[0].clientX - event.target.getBoundingClientRect().left;
+      const offsetY = event.offsetY || event.touches[0].clientY - event.target.getBoundingClientRect().top;
+
       if (!elButton.matches(":focus")) {
-        elButton.style.setProperty("--x", event.offsetX);
-        elButton.style.setProperty("--y", event.offsetY);
+        elButton.style.setProperty("--x", offsetX);
+        elButton.style.setProperty("--y", offsetY);
       }
-    });
+    };
+
+    elButton.addEventListener("mousedown", handleInteraction);
+    elButton.addEventListener("touchstart", handleInteraction);
 
     elButton.addEventListener("click", () => {
       crunchSound.currentTime = 0; // Reset the sound to start
@@ -44,9 +50,9 @@
       crunchSound.play();
     });
 
-    elButton.addEventListener("click", () => {
-      // Play the crunch sound
+    elButton.addEventListener("touchend", () => {
       crunchSound.currentTime = 0; // Reset the sound to start
+      crunchSound.playbackRate = 2.0; // Set playback speed to 2x
       crunchSound.play();
     });
 
