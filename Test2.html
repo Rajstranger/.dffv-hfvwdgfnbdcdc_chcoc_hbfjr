@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UntoldCoding</title>
+  <link rel="stylesheet" href="style2.css" />
+</head>
+
+<body>
+  <button class="chocolate-button">
+    <div class="crumbs"></div>
+    <span class="bar">
+      <span class="text"> Chocolate Bar</span>
+    </span>
+  </button>
+
+  <div class="instructions">Click on Chocolate</div>
+
+  <!-- Audio element for crunch sound -->
+  <audio id="crunch-sound" src="big-crunch-2-90138.mp3"></audio>
+
+  <!-- New button at the bottom left -->
+  <button class="want-chocolate-button"><a href="test3.html">Want Your Chocolate</a></button>
+
+  <script>
+    console.clear();
+
+    const elButton = document.querySelector(".chocolate-button");
+    const crunchSound = document.getElementById("crunch-sound");
+    const wantChocolateButton = document.querySelector(".want-chocolate-button");
+
+    elButton.addEventListener("mousedown", (event) => {
+      if (!elButton.matches(":focus")) {
+        elButton.style.setProperty("--x", event.offsetX);
+        elButton.style.setProperty("--y", event.offsetY);
+      }
+    });
+
+    elButton.addEventListener("click", () => {
+      crunchSound.currentTime = 0; // Reset the sound to start
+      crunchSound.playbackRate = 2.0; // Set playback speed to 2x
+      crunchSound.play();
+    });
+
+    elButton.addEventListener("click", () => {
+      // Play the crunch sound
+      crunchSound.currentTime = 0; // Reset the sound to start
+      crunchSound.play();
+    });
+
+    // wantChocolateButton.addEventListener("click", () => {
+    //   alert("Here's your chocolate!");
+    // });
+  </script>
+</body>
+
+</html>

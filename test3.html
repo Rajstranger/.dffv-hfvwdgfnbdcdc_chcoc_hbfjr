@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test3</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #502d24;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        #chocoPic {
+            mix-blend-mode: multiply;
+            width: 200px; /* Default size */
+            height: auto;
+            cursor: pointer;
+            transition: all 0.5s ease; /* Smooth transition for all properties */
+            opacity: 1; /* Start fully visible */
+            transform: scale(1); /* Start at normal size */
+        }
+
+        #chocoPic.larger {
+            width: 300px; /* Increased size for goldWrap.png */
+        }
+
+        #chocoPic.hidden {
+            opacity: 0; /* Hide the image */
+            transform: scale(0.8); /* Slightly shrink the image */
+        }
+
+        #textMsg {
+            margin-top: 20px;
+            color: white;
+            font-size: 20px;
+            top: 100px;
+            transition: all 0.5s ease; /* Smooth transition for text */
+        }
+
+        #textMsg.final {
+            font-size: 40px;
+            font-weight: bold;
+            text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+            transform: scale(1.5) rotateX(10deg) rotateY(10deg);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5) rotateX(10deg) rotateY(10deg);
+        }
+
+        /* Hide the audio element */
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Audio element for playing the song -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="ChocoWhispered.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <img id="chocoPic" src="chocowrapper.JPG.png" alt="Chocolate">
+    <div id="textMsg">Touch the chocolate to open</div>
+
+    <script>
+        // Play the background music when the page loads
+        window.onload = function () {
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            backgroundMusic.play();
+        };
+
+        let currentPic = 1;
+        const chocoPic = document.getElementById('chocoPic');
+        const textMsg = document.getElementById('textMsg');
+
+        chocoPic.addEventListener('click', function () {
+            chocoPic.classList.add('hidden'); // Hide the current image smoothly
+
+            setTimeout(() => {
+                if (currentPic === 1) {
+                    chocoPic.src = 'goldWrap.png';
+                    chocoPic.classList.add('larger'); // Add the larger class
+                    textMsg.textContent = 'Touch again';
+                    currentPic = 2;
+                } else if (currentPic === 2) {
+                    chocoPic.src = 'pic1.jpg';
+                    chocoPic.classList.remove('larger'); // Remove the larger class
+                    textMsg.textContent = 'Here is your chocolate';
+                    currentPic = 3;
+                } else if (currentPic === 3) {
+                    chocoPic.src = 'pic2.jpg';
+                    chocoPic.classList.remove('larger'); // Remove the larger class
+                    textMsg.textContent = 'another brown one';
+                    currentPic = 4;
+                } else if (currentPic === 4) {
+                    chocoPic.src = 'pic3.jpg';
+                    chocoPic.classList.remove('larger'); // Remove the larger class
+                    textMsg.textContent = 'one more ';
+                    currentPic = 5;
+                } else if (currentPic === 5) {
+                    chocoPic.src = 'pic4.jpg';
+                    chocoPic.classList.remove('larger'); // Remove the larger class
+                    textMsg.textContent = 'Last One';
+                    currentPic = 6;
+                } else if (currentPic === 6) {
+                    chocoPic.src = 'pic5.jpg';
+                    chocoPic.classList.remove('larger'); // Remove the larger class
+                    textMsg.textContent = 'thats All';
+                    currentPic = 7;
+                } else {
+                    chocoPic.style.display = 'none'; // Hide the image
+                    textMsg.textContent = 'Happy Chocolate Day!🙈🤭🍫';
+                    textMsg.classList.add('final'); // Add the final style
+                    return; // Exit the function early
+                }
+
+                chocoPic.classList.remove('hidden'); // Show the new image smoothly
+            }, 500); // Wait for the transition to complete before changing the image
+        });
+    </script>
+</body>
+
+</html>

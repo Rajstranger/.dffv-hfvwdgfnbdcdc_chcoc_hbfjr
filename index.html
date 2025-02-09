@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chocolate Melt Effect</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #1c0f0c;
+        }
+
+        .half {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(#502d24, #1c0f0c);
+            position: absolute;
+            transition: all 1.5s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #left-half {
+            left: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        #right-half {
+            right: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        #lock {
+            width: 80px;
+            height: 100px;
+            background: #d00000;
+            position: absolute;
+            bottom: 45%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 70px;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+
+        #key {
+            width: 120px;
+            height: 120px;
+            background: transparent;
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: grab;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 60px;
+            font-size: 50px;
+            font-weight: bold;
+            color: #ffeb3b;
+            z-index: 10;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        #key:active {
+            transform: scale(1.1);
+        }
+
+        /* Melting effect with curves */
+        @keyframes melt-left {
+            0% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            100% {
+                clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+                transform: translateY(100%) rotate(-10deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes melt-right {
+            0% {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            100% {
+                clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+                transform: translateY(100%) rotate(10deg);
+                opacity: 0;
+            }
+        }
+
+        .melt-left {
+            animation: melt-left 2s ease-in-out forwards;
+        }
+
+        .melt-right {
+            animation: melt-right 2s ease-in-out forwards;
+        }
+
+        /* Drop animation for the lock */
+        @keyframes drop {
+            0% {
+                transform: translate(-50%, 50%) scale(1.2);
+            }
+            100% {
+                transform: translate(-50%, 100vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .drop-lock {
+            animation: drop 1s ease-in-out forwards;
+        }
+
+        /* Single div after melting */
+        #single-div {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(#502d24, #1c0f0c);
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 5;
+        }
+
+        .show-single-div {
+            opacity: 1 !important;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #lock {
+                width: 60px;
+                height: 80px;
+                font-size: 50px;
+            }
+
+            #key {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+                line-height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="left-half" class="half"></div>
+        <div id="right-half" class="half"></div>
+        <div id="single-div"></div>
+    </div>
+    <div id="lock">🔒</div>
+    <div id="key">🔑</div>
+
+    <script>
+        let key = document.getElementById("key");
+        let lock = document.getElementById("lock");
+        let leftHalf = document.getElementById("left-half");
+        let rightHalf = document.getElementById("right-half");
+        let singleDiv = document.getElementById("single-div");
+        let isDragging = false;
+
+        // Mouse and touch event handlers
+        key.addEventListener('mousedown', startDrag);
+        key.addEventListener('touchstart', startDrag);
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(event) {
+            event.preventDefault();
+            isDragging = true;
+            key.style.cursor = 'grabbing';
+        }
+
+        function drag(event) {
+            if (isDragging) {
+                let clientX, clientY;
+
+                if (event.type === 'touchmove') {
+                    clientX = event.touches[0].clientX;
+                    clientY = event.touches[0].clientY;
+                } else {
+                    clientX = event.clientX;
+                    clientY = event.clientY;
+                }
+
+                let x = clientX - key.offsetWidth / 2;
+                let y = clientY - key.offsetHeight / 2;
+                key.style.left = `${x}px`;
+                key.style.top = `${y}px`;
+            }
+        }
+
+        function endDrag(event) {
+            if (isDragging) {
+                isDragging = false;
+                key.style.cursor = 'grab';
+
+                let keyRect = key.getBoundingClientRect();
+                let lockRect = lock.getBoundingClientRect();
+
+                if (keyRect.left < lockRect.right &&
+                    keyRect.right > lockRect.left &&
+                    keyRect.top < lockRect.bottom &&
+                    keyRect.bottom > lockRect.top) {
+                    // Unlock the lock
+                    lock.innerHTML = '🔓';
+                    lock.style.backgroundColor = '#4CAF50';
+                    lock.style.transform = 'translate(-50%, 50%) scale(1.2)';
+
+                    // Apply melting effect to halves
+                    leftHalf.classList.add('melt-left');
+                    rightHalf.classList.add('melt-right');
+
+                    // Show the single div after melting
+                    setTimeout(() => {
+                        singleDiv.classList.add('show-single-div');
+                    }, 1500); // Delay to sync with melting animation
+
+                    // Drop the lock
+                    setTimeout(() => {
+                        lock.classList.add('drop-lock');
+                    }, 2000); // Delay to sync with melting animation
+
+                    // Redirect to test.html after the lock drops
+                    setTimeout(() => {
+                        window.location.href = 'test.html';
+                    }, 3000); // Delay to sync with drop animation
+
+                    // Hide the key
+                    key.style.opacity = '0';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
