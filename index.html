@@ -9,6 +9,7 @@
             margin: 0;
             overflow: hidden;
             background: #1c0f0c;
+            font-family: Arial, sans-serif;
         }
 
         .half {
@@ -58,7 +59,7 @@
             height: 120px;
             background: transparent;
             position: absolute;
-            bottom: 30px;
+            bottom: 30px; /* Positioned slightly below the lock */
             left: 50%;
             transform: translateX(-50%);
             cursor: grab;
@@ -69,7 +70,8 @@
             font-weight: bold;
             color: #ffeb3b;
             z-index: 10;
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, opacity 0.5s ease-in-out;
+            opacity: 0; /* Initially hidden */
         }
 
         #key:active {
@@ -139,6 +141,32 @@
             opacity: 1 !important;
         }
 
+        /* Password input styling */
+        #password-container {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 20;
+        }
+
+        #password-container label {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #password-container input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            text-align: center;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             #lock {
@@ -165,13 +193,31 @@
     <div id="lock">🔒</div>
     <div id="key">🔑</div>
 
+    <!-- Password input container -->
+    <div id="password-container">
+        <label for="password">Enter the code:</label>
+        <input type="password" id="password" placeholder="Enter password">
+    </div>
+
     <script>
         let key = document.getElementById("key");
         let lock = document.getElementById("lock");
         let leftHalf = document.getElementById("left-half");
         let rightHalf = document.getElementById("right-half");
         let singleDiv = document.getElementById("single-div");
+        let passwordInput = document.getElementById("password");
+        let passwordContainer = document.getElementById("password-container");
         let isDragging = false;
+
+        // Password validation
+        passwordInput.addEventListener('input', function() {
+            if (passwordInput.value === '0407') {
+                // Show the key
+                key.style.opacity = '1';
+                // Hide the password container
+                passwordContainer.style.display = 'none';
+            }
+        });
 
         // Mouse and touch event handlers
         key.addEventListener('mousedown', startDrag);
